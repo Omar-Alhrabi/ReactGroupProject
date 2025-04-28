@@ -15,7 +15,7 @@ const PostList = () => {
         const response = await getPosts();
         setPosts(response.data);
       } catch (err) {
-        setError('فشل تحميل المنشورات');
+        setError('Failed to load posts');
         console.error(err);
       } finally {
         setLoading(false);
@@ -38,16 +38,15 @@ const PostList = () => {
         await likePost(postId, user.id);
       }
       
-      // تحديث المنشورات بعد الإعجاب/إلغاء الإعجاب
       const response = await getPosts();
       setPosts(response.data);
     } catch (err) {
-      setError('فشل تحديث الإعجاب');
+      setError('Failed to update like');
       console.error(err);
     }
   };
 
-  if (loading) return <div className="text-center p-6">جاري تحميل المنشورات...</div>;
+  if (loading) return <div className="text-center p-6">Loading posts...</div>;
   if (error) return <div className="text-red-500 p-6">{error}</div>;
 
   return (
@@ -72,7 +71,7 @@ const PostCard = ({ post, currentUser, onLike }) => {
       <div className="flex items-center mb-4">
         <div className="h-10 w-10 rounded-full bg-gray-300"></div>
         <div className="ml-3">
-          <h3 className="font-medium">{post.user?.name || 'مجهول'}</h3>
+          <h3 className="font-medium">{post.user?.name || 'unknown'}</h3>
           <p className="text-gray-500 text-sm">{new Date(post.created_at).toLocaleString()}</p>
         </div>
       </div>
@@ -85,15 +84,15 @@ const PostCard = ({ post, currentUser, onLike }) => {
           className={`flex items-center ${isLiked ? 'text-red-500' : 'text-gray-500'}`}
           onClick={() => onLike(post.id)}
         >
-          <span>{post.likes?.length || 0} إعجاب</span>
+          <span>{post.likes?.length || 0} Like</span>
         </button>
         
         <button className="flex items-center text-gray-500">
-          <span>{post.comments?.length || 0} تعليق</span>
+          <span>{post.comments?.length || 0} comment</span>
         </button>
         
         <button className="flex items-center text-gray-500">
-          مشاركة
+          share
         </button>
       </div>
     </div>
