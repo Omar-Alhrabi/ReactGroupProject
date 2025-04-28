@@ -38,7 +38,7 @@ Route::get('/chefs/{chef}', [ChefController::class, 'show'])->name('chefs.show')
 Route::get('/chefs/{chef}/courses', [ChefController::class, 'courses'])->name('chefs.courses');
 
 // Authentication routes (Laravel Breeze/Fortify will handle this)
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
 
 // Protected routes for authenticated users
 Route::middleware('auth')->group(function () {
