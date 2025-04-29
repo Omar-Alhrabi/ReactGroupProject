@@ -46,11 +46,11 @@ const PostList = () => {
     }
   };
 
-  if (loading) return <div className="text-center p-6">Loading posts...</div>;
-  if (error) return <div className="text-red-500 p-6">{error}</div>;
+  if (loading) return <div className="text-center p-4">Loading posts...</div>;
+  if (error) return <div className="text-danger p-4">{error}</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="d-flex flex-column gap-4">
       {posts.map(post => (
         <PostCard 
           key={post.id}
@@ -67,33 +67,35 @@ const PostCard = ({ post, currentUser, onLike }) => {
   const isLiked = post.likes?.some(like => currentUser && like.user_id === currentUser.id);
   
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <div className="flex items-center mb-4">
-        <div className="h-10 w-10 rounded-full bg-gray-300"></div>
-        <div className="ml-3">
-          <h3 className="font-medium">{post.user?.name || 'unknown'}</h3>
-          <p className="text-gray-500 text-sm">{new Date(post.created_at).toLocaleString()}</p>
+    <div className="card">
+      <div className="card-body">
+        <div className="d-flex align-items-center mb-3">
+          <div className="rounded-circle bg-secondary d-flex justify-content-center align-items-center" style={{width: "40px", height: "40px"}}></div>
+          <div className="ms-3">
+            <h3 className="fw-medium mb-0">{post.user?.name || 'unknown'}</h3>
+            <p className="text-muted small mb-0">{new Date(post.created_at).toLocaleString()}</p>
+          </div>
         </div>
-      </div>
-      
-      <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-      <p className="mb-4">{post.body}</p>
-      
-      <div className="flex items-center justify-between pt-2 border-t">
-        <button 
-          className={`flex items-center ${isLiked ? 'text-red-500' : 'text-gray-500'}`}
-          onClick={() => onLike(post.id)}
-        >
-          <span>{post.likes?.length || 0} Like</span>
-        </button>
         
-        <button className="flex items-center text-gray-500">
-          <span>{post.comments?.length || 0} comment</span>
-        </button>
+        <h2 className="fs-4 fw-bold mb-2">{post.title}</h2>
+        <p className="mb-3">{post.body}</p>
         
-        <button className="flex items-center text-gray-500">
-          share
-        </button>
+        <div className="d-flex align-items-center justify-content-between pt-2 border-top">
+          <button 
+            className={`btn btn-sm ${isLiked ? 'text-danger' : 'text-secondary'} border-0`}
+            onClick={() => onLike(post.id)}
+          >
+            {post.likes?.length || 0} Like
+          </button>
+          
+          <button className="btn btn-sm text-secondary border-0">
+            {post.comments?.length || 0} comment
+          </button>
+          
+          <button className="btn btn-sm text-secondary border-0">
+            share
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -45,55 +45,58 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-6 px-4">
-      <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
-        
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="title">Title</label>
-            <input
-              id="title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your post title"
-              required
-            />
-          </div>
+    <div className="container py-4">
+      <div className="card">
+        <div className="card-body">
+          <h1 className="fs-3 fw-bold mb-4">Create New Post</h1>
           
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2" htmlFor="body">Content</label>
-            <textarea
-              id="body"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="What's on your mind?"
-              required
-            />
-          </div>
+          {error && <div className="alert alert-danger mb-3">{error}</div>}
           
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="mr-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              disabled={loading}
-            >
-              {loading ? 'Creating...' : 'Create Post'}
-            </button>
-          </div>
-        </form>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="title">Title</label>
+              <input
+                id="title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="form-control"
+                placeholder="Enter your post title"
+                required
+              />
+            </div>
+            
+            <div className="mb-4">
+              <label className="form-label" htmlFor="body">Content</label>
+              <textarea
+                id="body"
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                className="form-control"
+                style={{ height: "160px" }}
+                placeholder="What's on your mind?"
+                required
+              />
+            </div>
+            
+            <div className="text-end">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="btn btn-secondary me-2"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? 'Creating...' : 'Create Post'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
