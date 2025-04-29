@@ -63,69 +63,97 @@ const PostDetail = () => {
   };
 
   if (loading) return <Loader />;
-  if (error) return <div className="text-red-500 text-center py-4">{error}</div>;
+  if (error) return <div className="text-danger text-center py-4">{error}</div>;
   if (!post) return <div className="text-center py-4">Post not found</div>;
 
   const isLiked = post.likes?.some(like => like.user_id === user?.id);
   const isAuthor = user && post.user_id === user.id;
 
   return (
-    <div className="max-w-4xl mx-auto py-6 px-4">
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center">
-            <div className="h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
-              {post.user?.avatar ? (
-                <img 
-                  src={post.user.avatar} 
-                  alt={post.user.name} 
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-600">{post.user?.name.charAt(0)}</span>
-              )}
+    <div className="container py-4">
+      <div className="card">
+        <div className="card-body">
+          <div className="d-flex justify-content-between align-items-start mb-3">
+            <div className="d-flex align-items-center">
+              <div className="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style={{width: "40px", height: "40px"}}>
+                {post.user?.avatar ? (
+                  <img 
+                    src={post.user.avatar} 
+                    alt={post.user.name} 
+                    className="rounded-circle w-100 h-100 object-fit-cover"
+                  />
+                ) : (
+                  <span className="text-white">{post.user?.name.charAt(0)}</span>
+                )}
+              </div>
+              <div className="ms-3">
+                <Link to={`/profile/${post.user_id}`} className="fw-medium text-decoration-hover">
+                  {post.user?.name || 'Unknown User'}
+                </Link>
+                <p className="text-muted small mb-0">{formatDate(post.created_at)}</p>
+              </div>
             </div>
-            <div className="ml-3">
-              <Link to={`/profile/${post.user_id}`} className="font-medium hover:underline">
-                {post.user?.name || 'Unknown User'}
-              </Link>
-              <p className="text-gray-500 text-sm">{formatDate(post.created_at)}</p>
-            </div>
+
+            {isAuthor && (
+              <div className="d-flex gap-2">
+                <Link 
+                  to={`/posts/${post.id}/edit`} 
+                  className="small text-primary text-decoration-hover"
+                >
+                  Edit
+                </Link>
+                <button 
+                  onClick={() => setShowDeleteModal(true)}
+                  className="small text-danger border-0 bg-transparent p-0 text-decoration-hover"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
 
-          {isAuthor && (
-            <div className="flex space-x-2">
-              <Link 
-                to={`/posts/${post.id}/edit`} 
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Edit
-              </Link>
+          <h1 className="fs-3 fw-bold mb-3">{post.title}</h1>
+          <div className="mb-4">
+            <p>{post.body}</p>
+          </div>
+
+          <div className="d-flex align-items-center justify-content-between border-top pt-3">
+            <div className="d-flex align-items-center">
               <button 
-                onClick={() => setShowDeleteModal(true)}
-                className="text-sm text-red-600 hover:underline"
+                onClick={handleLike}
+                className={`btn btn-sm ${isLiked ? 'text-danger' : 'text-secondary'} p-0 d-flex align-items-center border-0`}
+                disabled={!user}
               >
-                Delete
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16" 
+                  height="16"
+                  className="me-1" 
+                  fill={isLiked ? 'currentColor' : 'none'} 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth="2" 
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                  />
+                </svg>
+                <span>{post.likes?.length || 0} likes</span>
               </button>
+              <div className="ms-3 text-secondary">
+                <span>{post.comments?.length || 0} comments</span>
+              </div>
             </div>
-          )}
-        </div>
-
-        <h1 className="text-2xl font-bold mb-4">{post.title}</h1>
-        <div className="prose max-w-none mb-6">
-          <p>{post.body}</p>
-        </div>
-
-        <div className="flex items-center justify-between border-t pt-4">
-          <div className="flex items-center">
-            <button 
-              onClick={handleLike}
-              className={`flex items-center ${isLiked ? 'text-red-500' : 'text-gray-500'}`}
-              disabled={!user}
-            >
+            
+            <button className="btn btn-sm text-secondary p-0 d-flex align-items-center border-0">
               <svg 
-                className="w-5 h-5 mr-1" 
-                fill={isLiked ? 'currentColor' : 'none'} 
+                xmlns="http://www.w3.org/2000/svg"
+                width="16" 
+                height="16"
+                className="me-1" 
+                fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
               >
@@ -133,55 +161,50 @@ const PostDetail = () => {
                   strokeLinecap="round" 
                   strokeLinejoin="round" 
                   strokeWidth="2" 
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" 
                 />
               </svg>
-              <span>{post.likes?.length || 0} likes</span>
+              Share
             </button>
-            <div className="ml-4 text-gray-500">
-              <span>{post.comments?.length || 0} comments</span>
-            </div>
           </div>
-          
-          <button className="text-gray-500 flex items-center">
-            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth="2" 
-                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" 
-              />
-            </svg>
-            Share
-          </button>
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <CommentList postId={post.id} />
       </div>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md mx-4">
-            <h3 className="text-xl font-bold mb-4">Confirm Delete</h3>
-            <p className="mb-6">Are you sure you want to delete this post? This action cannot be undone.</p>
-            <div className="flex justify-end space-x-3">
-              <button 
-                onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              >
-                Delete
-              </button>
+        <div className="modal fade show" style={{display: 'block'}} tabIndex="-1" aria-modal="true" role="dialog">
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="btn-close" onClick={() => setShowDeleteModal(false)} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-danger" 
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
+          <div className="modal-backdrop fade show"></div>
         </div>
       )}
     </div>

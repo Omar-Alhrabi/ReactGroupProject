@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import SearchBar from './SearchBar';
 
-
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -14,45 +13,71 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md py-4">
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold text-blue-600">
+    <nav className="navbar navbar-expand-md navbar-light bg-white shadow-sm py-2">
+      <div className="container">
+        <Link to="/" className="navbar-brand fw-bold text-primary">
           SocialApp
         </Link>
 
-        <div className="flex items-center space-x-4">
-          <Link to="/" className="text-gray-700 hover:text-blue-600">
-            Home
-          </Link>
-          <div className="hidden md:block max-w-lg w-full px-4">
-          <SearchBar />
-        </div>
-          {user ? (
-            <>
-              <Link to={`/profile/${user.id}`} className="text-gray-700 hover:text-blue-600">
-                Profile
-              </Link>
+        <button 
+          className="navbar-toggler" 
+          type="button" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#navbarContent"
+          aria-controls="navbarContent" 
+          aria-expanded="false" 
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-              <button
-                onClick={handleLogout}
-                className="text-gray-700 hover:text-blue-600"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="text-gray-700 hover:text-blue-600">
-                Login
+        <div className="collapse navbar-collapse" id="navbarContent">
+          <ul className="navbar-nav ms-auto mb-2 mb-md-0 align-items-center">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">
+                Home
               </Link>
-              <Link
-                to="/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Register
-              </Link>
-            </>
-          )}
+            </li>
+            <li className="nav-item d-none d-md-block">
+              <div className="px-3" style={{ maxWidth: '350px', width: '100%' }}>
+                <SearchBar />
+              </div>
+            </li>
+            
+            {user ? (
+              <>
+                <li className="nav-item">
+                  <Link to={`/profile/${user.id}`} className="nav-link">
+                    Profile
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <button
+                    onClick={handleLogout}
+                    className="nav-link border-0 bg-transparent"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link to="/login" className="nav-link">
+                    Login
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/register"
+                    className="btn btn-primary"
+                  >
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
         </div>
       </div>
     </nav>
